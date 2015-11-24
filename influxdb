@@ -1,0 +1,9 @@
+#!/bin/bash
+DIR=$(dirname "$BASH_SOURCE")
+source "/etc/statsd.conf" 2>/dev/null
+source "$HOME/.statsd.conf" 2>/dev/null
+source "statsd.conf" 2>/dev/null
+stats=$($DIR/stats)
+curl -i -XPOST "${INFLUXDB_HOST}/write?db=${INFLUXDB_DB}" \
+    -u "${USERNAME}:${PASSWORD}" \
+    --data-binary "$stats"

@@ -1,0 +1,16 @@
+#!/bin/bash
+# Outputs InfluxDB Line Protocol
+# Depends on: awk, tail
+DIR=$(dirname "$BASH_SOURCE")
+source "$DIR/cpu.bash"
+source "$DIR/mem.bash"
+source "$DIR/disk.bash"
+
+host="$(hostname)"
+cpu=$(cpu)
+mem=$(mem)
+timestamp="$(date +%s)000000000"
+
+echo "cpu,host=${host} percent=${cpu} ${timestamp}"
+echo "mem,host=${host} percent=${mem} ${timestamp}"
+disk | awk "{printf \"disk,host=${host},mount=%s percent=%d ${timestamp}\n\", \$1, \$2}"
